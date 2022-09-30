@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Inventory App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+    <style>
+        body {
+            background-color: #737373;
+        }
+        #titleDiv {
+            padding-top: 50px;
+            height: 75px;
+            text-align: center;
+        }
+        #title {
+            font-size: 30px;
+            font-style: bold;
+        }
+        #subtitle{
+            font-size: 20px;
+            font-style: italic;
+        }
+        .button1 {
+            background-color: #4CAF50; /* Green */
+            color: white;
+            margin: auto;
+            cursor: pointer;
+            padding: 15px 32px;
+            width: 100px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            border: 2px solid black;
+            border-radius: 25px;
+        }
+        table {
+            margin-top: 50px;
+            margin-left:auto;
+            margin-right: auto;
+        }
+        .td1 {
+            height: 25px;
+            width: 120px;
+            vertical-align: center;
+            text-align: center;
+            border: 2px solid black;
+        }
+        .td2 {
+            height: 25px;
+            width: 25px;
+            vertical-align: center;
+            text-align: center;
+            border: 2px solid black;
+        }
+        th {
+            width: 120px;
+        }
+        .button2 {
+            background-color: #4CAF50; /* Green */
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 25px;
+            cursor: pointer;
+        }
+        .button3 {
+            background-color: red; /* Green */
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 16px;
+            border-radius: 25px;
+            cursor: pointer;
+        }
+    #newItemModal{
+        position: fixed; /* Stay in place */
+        z-index: 1; /* Sit on top */
+        margin-left: 33%;
+        margin-top: 5%;
+        padding-top: 2%;
+        padding-left: 2%;
+        top: 0;
+        width: 33%; 
+        height: 20%; 
+        overflow: auto; /* Enable scroll if needed */
+        background-color: green;
+        color: white;
+    }
+        
+    </style>
+</head>
+<body>
+    <div id="wrapper">
+        <div id="titleDiv">
+            <div id="title">Austin's Inventory App</div>
+            <div id="subtitle">Managing tomorrow's inventories, today.</div>
+        </div>
+        <div id="toolbar">
+            <!-- button to add a new item to the list -->
+            <div id="addItem" class="button1" onclick="addNewItem1()">Add Item</div>
+        </div>
+        <div id="summary">
+            <table id="inventoryTable">
+                <tr id="tableHeader">
+                  <th>Item Name</th>
+                  <th>Description</th>
+                  <th>Price</th>
+                  <th>Category</th>
+                  <th>Quantity</th>
+                  <th>Add Quantity</th>
+                  <th>Remove Quantity</th>
+                  <th>Remove Item From List</th>
+                </tr>
+                <tr id="ApplesRow">
+                  <td class="td1">Apples</td>
+                  <td class="td1">Red and Delicious</td>
+                  <td class="td1">$5.99</td>
+                  <td class="td1">Fruit</td>
+                  <td id="applesQuant" class="td1">2</td>
+                  <td id="applesPlus" class="button2 td2" onclick="increase('applesQuant')">+</td>
+                  <td id="applesMinus" class="button2 td2" onclick="decrease('applesQuant')">-</td>
+                  <td id="removeapples" class="button3 td2"onclick="removeItem('ApplesRow')">Remove</td>
+                </tr>
+                <!-- <tr id="BananasRow">
+                  <td class="td1">Bananas</td>
+                  <td id="bananasQuant" class="td1">6</td>
+                  <td id="bananasPlus" class="button2 td2"  onclick="iterateBananas()">+</td>
+                  <td id="bananasMinus" class="button2 td2"  onclick="decreaseBananas()">-</td>
+                </tr> -->
+              </table>
+        </div>     
+        <div id="newItemModal">
+            <div id="newItemTitle">
+                Add New Item Details:
+            </div>
+            <br><br>
+            <form action="/action_page.php">
+                <label for="itemNameToAdd">Item name:</label>
+                <input type="text" id="itemNameToAdd" name="itemNameToAdd"><br><br>
+                <label for="itemQuantToAdd">Current Quantity:</label>
+                <input type="text" id="itemQuantToAdd" name="itemQuantToAdd"><br><br>
+            </form>
+            <div class="button1" onclick="addNewItem2()">Submit</div>
+        </div>
+    </div>
+
+<script type="text/javascript">
+     $("#newItemModal").hide();
+    function addNewItem1() {
+        $("#newItemModal").show();
+    }
+    function addNewItem2() {
+                //get items from form and add to table
+                var x = $("form").serializeArray();
+                console.log("itemName = "+ x[0].value)
+                let itemName = x[0].value;
+                console.log("itemQuant = "+x[1].value)
+                let currentQuant = x[1].value;   
+                var table = document.getElementById("inventoryTable");
+                let currentRowCount = table.rows.length;
+                let quantName = "'"+itemName+"quant'";
+                let rowName = "'"+itemName+"Row'"
+                $("#inventoryTable").append('<tr id="'+itemName+'Row"><td class="td1">'+itemName+'</td><td id="'+itemName+'quant" class="td1">'+currentQuant+'</td><td id="'+itemName+'Plus" class="button2 td2" onclick="increase('+quantName+')">+</td><td id="'+itemName+'Minus" class="button2 td2" onclick="decrease('+quantName+')">-</td><td id="remove'+itemName+'" class="button3 td2" onclick="removeItem('+rowName+')">Remove</td></tr>');
+                $("#newItemModal").hide();
+                let formInput1 = document.getElementById("itemNameToAdd");
+                let formInput2 = document.getElementById("itemQuantToAdd");
+                formInput1.innerHTML="";
+                formInput2.innerHTML="";
+    }
+    function removeItem(itemToRemove){
+        const element = document.getElementById(itemToRemove);
+        element.remove(); // Removes the div with the 'div-02' id
+    }
+    function increase(nr){
+        console.log(nr);
+        let nrQuant = $("#"+nr).text();
+        console.log(nrQuant);
+        let currentQuant = nrQuant;
+        midQuant = parseInt(nrQuant);
+        console.log(midQuant)
+        let newQuant = midQuant+1;
+        console.log(newQuant);
+        div = document.getElementById(nr);
+        div.innerHTML = "";
+        div.innerHTML = newQuant;
+    }
+    function decrease(nr){
+        console.log(nr);
+        let nrQuant = $("#"+nr).text();
+        console.log(nrQuant);
+        let currentQuant = nrQuant;
+        midQuant = parseInt(nrQuant);
+        console.log(midQuant)
+        let newQuant = midQuant-1;
+        console.log(newQuant);
+        div = document.getElementById(nr);
+        div.innerHTML = "";
+        div.innerHTML = newQuant;
+    }
+</script>    
+</body>
+
+</html>
