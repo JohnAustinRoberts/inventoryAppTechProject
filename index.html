@@ -86,7 +86,7 @@
         padding-left: 2%;
         top: 0;
         width: 33%; 
-        height: 20%; 
+        height: 60%; 
         overflow: auto; /* Enable scroll if needed */
         background-color: green;
         color: white;
@@ -117,21 +117,15 @@
                   <th>Remove Item From List</th>
                 </tr>
                 <tr id="ApplesRow">
-                  <td class="td1">Apples</td>
-                  <td class="td1">Red and Delicious</td>
-                  <td class="td1">$5.99</td>
-                  <td class="td1">Fruit</td>
+                  <td id="applesName" class="td1" >Apples</td>
+                  <td id="applesDesc"class="td1">Red and Delicious</td>
+                  <td id="applesPrice"class="td1">$5.99</td>
+                  <td id="applesCat"class="td1">Fruit</td>
                   <td id="applesQuant" class="td1">2</td>
                   <td id="applesPlus" class="button2 td2" onclick="increase('applesQuant')">+</td>
                   <td id="applesMinus" class="button2 td2" onclick="decrease('applesQuant')">-</td>
                   <td id="removeapples" class="button3 td2"onclick="removeItem('ApplesRow')">Remove</td>
                 </tr>
-                <!-- <tr id="BananasRow">
-                  <td class="td1">Bananas</td>
-                  <td id="bananasQuant" class="td1">6</td>
-                  <td id="bananasPlus" class="button2 td2"  onclick="iterateBananas()">+</td>
-                  <td id="bananasMinus" class="button2 td2"  onclick="decreaseBananas()">-</td>
-                </tr> -->
               </table>
         </div>     
         <div id="newItemModal">
@@ -142,6 +136,13 @@
             <form action="/action_page.php">
                 <label for="itemNameToAdd">Item name:</label>
                 <input type="text" id="itemNameToAdd" name="itemNameToAdd"><br><br>
+                <label for="itemNameToAdd">Description:</label>
+                <input type="text" id="itemDescToAdd" name="itemDescToAdd"><br><br>
+                <label for="itemNameToAdd">Price:</label>
+                <input type="text" id="itemPriceToAdd" name="itemPriceToAdd"><br><br>
+                <!-- upgrade to category input to dropdown menu -->
+                <label for="itemNameToAdd">Category:</label>
+                <input type="text" id="itemCatToAdd" name="itemCatToAdd"><br><br>
                 <label for="itemQuantToAdd">Current Quantity:</label>
                 <input type="text" id="itemQuantToAdd" name="itemQuantToAdd"><br><br>
             </form>
@@ -157,15 +158,20 @@
     function addNewItem2() {
                 //get items from form and add to table
                 var x = $("form").serializeArray();
-                console.log("itemName = "+ x[0].value)
+                //create variables for each input value
                 let itemName = x[0].value;
-                console.log("itemQuant = "+x[1].value)
-                let currentQuant = x[1].value;   
+                let itemDesc = x[1].value; 
+                let itemPrice = x[2].value;
+                let itemCat = x[3].value;
+                let itemQuant = x[4].value;
+                //prepare the names for row and cell id names
                 var table = document.getElementById("inventoryTable");
                 let currentRowCount = table.rows.length;
+                //get cell names ready
                 let quantName = "'"+itemName+"quant'";
+                //get row name for remove item button
                 let rowName = "'"+itemName+"Row'"
-                $("#inventoryTable").append('<tr id="'+itemName+'Row"><td class="td1">'+itemName+'</td><td id="'+itemName+'quant" class="td1">'+currentQuant+'</td><td id="'+itemName+'Plus" class="button2 td2" onclick="increase('+quantName+')">+</td><td id="'+itemName+'Minus" class="button2 td2" onclick="decrease('+quantName+')">-</td><td id="remove'+itemName+'" class="button3 td2" onclick="removeItem('+rowName+')">Remove</td></tr>');
+                $("#inventoryTable").append('<tr id="'+itemName+'Row"><td class="td1">'+itemName+'</td><td id="'+itemName+'desc" class="td1">'+itemDesc+'</td><td id="'+itemName+'price" class="td1">'+itemPrice+'</td><td id="'+itemName+'cat" class="td1">'+itemCat+'</td><td id="'+itemName+'quant" class="td1">'+itemQuant+'</td><td id="'+itemName+'Plus" class="button2 td2" onclick="increase('+quantName+')">+</td><td id="'+itemName+'Minus" class="button2 td2" onclick="decrease('+quantName+')">-</td><td id="remove'+itemName+'" class="button3 td2" onclick="removeItem('+rowName+')">Remove</td></tr>');
                 $("#newItemModal").hide();
                 let formInput1 = document.getElementById("itemNameToAdd");
                 let formInput2 = document.getElementById("itemQuantToAdd");
@@ -174,7 +180,7 @@
     }
     function removeItem(itemToRemove){
         const element = document.getElementById(itemToRemove);
-        element.remove(); // Removes the div with the 'div-02' id
+        element.remove(); 
     }
     function increase(nr){
         console.log(nr);
